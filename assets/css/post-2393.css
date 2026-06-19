@@ -106,6 +106,7 @@ html body{
     height: 100%;
 
     z-index: 10;
+    pointer-events: none;
 }/* End custom CSS */
 /* Start custom CSS for image-carousel, class: .elementor-element-ba70e9b */.elementor-2393 .elementor-element.elementor-element-ba70e9b .swiper-wrapper{
   transition-timing-function: linear !important; 
@@ -134,6 +135,7 @@ html body{
     height: 100%;
 
     z-index: 10;
+    pointer-events: none;
 }/* End custom CSS */
 /* Start custom CSS for countdown, class: .elementor-element-2d14880c */.elementor-2393 .elementor-element.elementor-element-2d14880c .elementor-countdown-digits {
     background-color: transparent;

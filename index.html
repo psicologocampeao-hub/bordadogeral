@@ -1509,19 +1509,27 @@ var ElementorProFrontendConfig = {"ajaxurl":"https:\/\/maquinadeebook.online\/wp
     if (typeof Swiper === 'undefined') return;
     document.querySelectorAll('.elementor-widget-image-carousel').forEach(function (widget) {
       var container = widget.querySelector('.elementor-image-carousel-wrapper.swiper');
-      if (!container || container.swiper) return;
+      if (!container) return;
+      /* Destroy any existing Swiper instance (Elementor's or ours) so we can
+         recreate it with allowTouchMove and grabCursor enabled. */
+      if (container.swiper) {
+        container.swiper.destroy(true, true);
+        container.classList.remove('swiper-initialized', 'swiper-horizontal', 'swiper-backface-hidden');
+      }
       var s = {};
       try { s = JSON.parse(widget.getAttribute('data-settings') || '{}'); } catch (e) { return; }
       var spacing = (s.image_spacing_custom && s.image_spacing_custom.size != null)
         ? Number(s.image_spacing_custom.size) : 20;
       var delay = (s.autoplay_speed != null) ? Number(s.autoplay_speed) : 3000;
       new Swiper(container, {
-        slidesPerView : Number(s.slides_to_show) || 5,
-        spaceBetween  : spacing,
-        speed         : Number(s.speed) || 500,
-        loop          : s.infinite === 'yes',
-        autoplay      : s.autoplay === 'yes'
-          ? { delay: delay, disableOnInteraction: false, pauseOnMouseEnter: false }
+        slidesPerView  : Number(s.slides_to_show) || 5,
+        spaceBetween   : spacing,
+        speed          : Number(s.speed) || 500,
+        loop           : s.infinite === 'yes',
+        allowTouchMove : true,
+        grabCursor     : true,
+        autoplay       : s.autoplay === 'yes'
+          ? { delay: delay, disableOnInteraction: false, pauseOnMouseEnter: true }
           : false,
         breakpoints: {
           0:    { slidesPerView: Number(s.slides_to_show_mobile) || 2,  spaceBetween: 10 },
@@ -1531,9 +1539,8 @@ var ElementorProFrontendConfig = {"ajaxurl":"https:\/\/maquinadeebook.online\/wp
       });
     });
   }
-  /* Give Elementor 600 ms to initialize; if it doesn't, we do it. */
-  document.addEventListener('DOMContentLoaded', function () { setTimeout(initCarousels, 600); });
-  window.addEventListener('load', function () { setTimeout(initCarousels, 200); });
+  /* Wait for page load then destroy+recreate every carousel with touch enabled. */
+  window.addEventListener('load', function () { setTimeout(initCarousels, 400); });
 })();
 </script>
 	</body>
